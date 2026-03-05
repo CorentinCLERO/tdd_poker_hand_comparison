@@ -26,41 +26,44 @@ export enum Rank {
   Ace = 14,
 }
 
-export function getBestHand(userCards: Card[], communityCard: Card[]): Card[] {
+function findPairs(cards: Card[]): Card[][] {
+  const pairs: Card[][] = [];
+  for (let i = 0; i < cards.length - 1; i++) {
+    if (cards[i]!.rank === cards[i + 1]!.rank) {
+      pairs.push([cards[i]!, cards[i + 1]!]);
+    }
+  }
+  return pairs;
+}
+
+function kickers(cards: Card[], excludeRanks: Rank[], count: number): Card[] {
+  return cards.filter((c) => !excludeRanks.includes(c.rank)).slice(0, count);
+}
+
+export function getBestHand(userCards: Card[], communityCards: Card[]): Card[] {
   if (userCards.length !== 2) {
     throw new Error("User should have 2 cards");
   }
 
-  if (communityCard.length !== 5) {
+  if (communityCards.length !== 5) {
     throw new Error("Community should have 5 cards");
   }
 
-  const allCards: Card[] = [...userCards, ...communityCard].sort(
-    (a, b) => b.rank - a.rank,
-  );
-
-  const pairs: Card[][] = [];
-
-  for (let i = 0; i < allCards.length - 1; i++) {
-    if (allCards[i]?.rank === allCards[i + 1]?.rank) {
-      pairs.push([allCards[i]!, allCards[i + 1]!]);
-    }
-  }
+  const allCards = [...userCards, ...communityCards].sort((a, b) => b.rank - a.rank);
+  const pairs = findPairs(allCards);
 
   if (pairs.length === 2) {
     return [
       ...pairs[0]!,
       ...pairs[1]!,
-      ...allCards
-        .filter((c) => c.rank !== pairs[0]![0]!.rank && c.rank !== pairs[1]![0]!.rank)
-        .slice(0, 1),
+      ...kickers(allCards, [pairs[0]![0]!.rank, pairs[1]![0]!.rank], 1),
     ];
   }
 
   if (pairs.length === 1) {
     return [
       ...pairs[0]!,
-      ...allCards.filter((c) => c.rank !== pairs[0]![0]!.rank).slice(0, 3),
+      ...kickers(allCards, [pairs[0]![0]!.rank], 3),
     ];
   }
 
