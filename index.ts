@@ -59,11 +59,11 @@ function findThreeOfAKind(cards: Card[]): Card[][] {
 }
 
 function findStraight(cards: Card[]): Card[] | null {
-  const uniqueRanks = Array.from(new Set(cards.map((c) => c.rank))).sort(
+  let uniqueRanks = Array.from(new Set(cards.map((c) => c.rank))).sort(
     (a, b) => b - a,
   );
 
-  if (uniqueRanks.includes(Rank.Ace)) uniqueRanks.push(Rank.Ace);
+  if (uniqueRanks.includes(Rank.Ace)) uniqueRanks.push(1);
 
   for (let i = 0; i <= uniqueRanks.length - 5; i++) {
     let isStraight = true;
@@ -73,18 +73,21 @@ function findStraight(cards: Card[]): Card[] | null {
         break;
       }
     }
+
     if (isStraight) {
       const straightRanks = uniqueRanks.slice(i, i + 5);
+
       return cards
         .filter(
           (c) =>
             straightRanks.includes(c.rank) ||
-            (c.rank === Rank.Ace && straightRanks.includes(Rank.Ace)),
+            (c.rank === Rank.Ace && straightRanks.includes(1)),
         )
         .sort((a, b) => b.rank - a.rank)
         .slice(0, 5);
     }
   }
+
   return null;
 }
 

@@ -759,6 +759,73 @@ test("it return royal flush", () => {
   expect(result).toEqual(expect.arrayContaining(expected_result));
 });
 
+test("it return straight with ace as low card", () => {
+  // Given
+  const user_cards: Card[] = [
+    {
+      rank: Rank.Ace,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Two,
+      color: Color.Hearts,
+    },
+  ];
+
+  const community_cards: Card[] = [
+    {
+      rank: Rank.Three,
+      color: Color.Diamonds,
+    },
+    {
+      rank: Rank.Four,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Five,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.King,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Queen,
+      color: Color.Diamonds,
+    },
+  ];
+
+  const expected_result: Card[] = [
+    {
+      rank: Rank.Ace,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Two,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Three,
+      color: Color.Diamonds,
+    },
+    {
+      rank: Rank.Four,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Five,
+      color: Color.Hearts,
+    },
+  ];
+
+  // When
+  const game = new TexasHoldem([user_cards], community_cards);
+  const result = game.getBestHand(0);
+
+  // Then
+  expect(result).toEqual(expect.arrayContaining(expected_result));
+});
+
 // ------------------------------------------------
 // tests getTableWinner
 // ------------------------------------------------
