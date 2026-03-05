@@ -289,3 +289,70 @@ test("it return two pair", () => {
   // Then
   expect(result).toEqual(expect.arrayContaining(expected_result));
 });
+
+test("it return three of a kind", () => {
+  // Given
+  const user_cards: Card[] = [
+    {
+      rank: Rank.Two,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.King,
+      color: Color.Spades,
+    },
+  ];
+
+  const community_cards: Card[] = [
+    {
+      rank: Rank.Six,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Two,
+      color: Color.Diamonds,
+    },
+    {
+      rank: Rank.Two,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Jack,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Seven,
+      color: Color.Spades,
+    },
+  ];
+
+  const expected_result: Card[] = [
+    {
+      rank: Rank.Two,
+      color: Color.Diamonds,
+    },
+    {
+      rank: Rank.Two,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Two,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.King,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Jack,
+      color: Color.Clubs,
+    },
+  ];
+
+  // When
+  const game = new TexasHoldem([user_cards], community_cards);
+  const result = game.getBestHand(0);
+
+  // Then
+  expect(result).toEqual(expect.arrayContaining(expected_result));
+});
