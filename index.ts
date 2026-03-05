@@ -223,4 +223,8 @@ export class TexasHoldem {
 
     return allCards.slice(0, 5);
   }
+
+  getTableWinner(): number {
+    return 0;
+  }
 }

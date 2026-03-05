@@ -758,3 +758,62 @@ test("it return royal flush", () => {
   // Then
   expect(result).toEqual(expect.arrayContaining(expected_result));
 });
+
+// ------------------------------------------------
+// tests getTableWinner
+// ------------------------------------------------
+
+test("it return only one winner", () => {
+  // Given
+  const user1_cards: Card[] = [
+    {
+      rank: Rank.Ace,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.King,
+      color: Color.Spades,
+    },
+  ];
+
+  const user2_cards: Card[] = [
+    {
+      rank: Rank.Two,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Seven,
+      color: Color.Diamonds,
+    },
+  ];
+
+  const community_cards: Card[] = [
+    {
+      rank: Rank.Ace,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Ace,
+      color: Color.Diamonds,
+    },
+    {
+      rank: Rank.Ace,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Three,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Five,
+      color: Color.Diamonds,
+    },
+  ];
+
+  // When
+  const game = new TexasHoldem([user1_cards, user2_cards], community_cards);
+  const winner = game.getTableWinner();
+
+  // Then
+  expect(typeof winner).toBe("number");
+});
