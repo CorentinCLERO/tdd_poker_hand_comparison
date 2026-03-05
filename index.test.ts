@@ -817,3 +817,46 @@ test("it return only one winner", () => {
   // Then
   expect(typeof winner).toBe("number");
 });
+
+test("it should throw if less than 2 players", () => {
+  // Given
+  const user1_cards: Card[] = [
+    {
+      rank: Rank.Two,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Seven,
+      color: Color.Diamonds,
+    },
+  ];
+
+  const community_cards: Card[] = [
+    {
+      rank: Rank.Ace,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Ace,
+      color: Color.Diamonds,
+    },
+    {
+      rank: Rank.Ace,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Three,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Five,
+      color: Color.Diamonds,
+    },
+  ];
+
+  // When
+  // Then
+  expect(() =>
+    new TexasHoldem([user1_cards], community_cards).getTableWinner(),
+  ).toThrow("There should be at least 2 players");
+});

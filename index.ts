@@ -225,6 +225,9 @@ export class TexasHoldem {
   }
 
   getTableWinner(): number {
+    if (this.players.length < 2) {
+      throw new Error("There should be at least 2 players");
+    }
     return 0;
   }
 }
