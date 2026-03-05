@@ -85,7 +85,7 @@ test("it return 5 highest cards", () => {
   const result = getBestHand(user_cards, community_cards);
 
   // Then
-  expect(result.map((card) => card.rank)).toBe([
+  expect(result.map((card) => card.rank)).toEqual([
     Rank.Jack,
     Rank.Seven,
     Rank.Six,
