@@ -228,6 +228,15 @@ export class TexasHoldem {
     if (this.players.length < 2) {
       throw new Error("There should be at least 2 players");
     }
+    return this.players
+      .map((_, i) => ({ index: i, hand: this.getBestHand(i) }))
+      .reduce((best, current) => {
+        for (let j = 0; j < 5; j++) {
+          if (current.hand[j]!.rank > best.hand[j]!.rank) return current;
+          if (current.hand[j]!.rank < best.hand[j]!.rank) return best;
+        }
+        return best;
+      }).index;
     return 0;
   }
 }

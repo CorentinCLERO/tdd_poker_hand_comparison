@@ -860,3 +860,83 @@ test("it should throw if less than 2 players", () => {
     new TexasHoldem([user1_cards], community_cards).getTableWinner(),
   ).toThrow("There should be at least 2 players");
 });
+
+test("it return the correct winner", () => {
+  // Given
+  const user1_cards: Card[] = [
+    {
+      rank: Rank.Two,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Seven,
+      color: Color.Diamonds,
+    },
+  ];
+
+  const user2_cards: Card[] = [
+    {
+      rank: Rank.Three,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Eight,
+      color: Color.Diamonds,
+    },
+  ];
+
+  const user3_cards: Card[] = [
+    {
+      rank: Rank.Ace,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Ace,
+      color: Color.Hearts,
+    },
+  ];
+
+  const user4_cards: Card[] = [
+    {
+      rank: Rank.Four,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Nine,
+      color: Color.Diamonds,
+    },
+  ];
+
+  const community_cards: Card[] = [
+    {
+      rank: Rank.Ace,
+      color: Color.Diamonds,
+    },
+    {
+      rank: Rank.Ace,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.King,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Three,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Five,
+      color: Color.Diamonds,
+    },
+  ];
+
+  // When
+  const game = new TexasHoldem(
+    [user1_cards, user2_cards, user3_cards, user4_cards],
+    community_cards,
+  );
+  const winner = game.getTableWinner();
+
+  // Then
+  expect(winner).toBe(2);
+});
