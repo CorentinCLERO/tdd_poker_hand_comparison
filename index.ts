@@ -27,7 +27,16 @@ export enum Rank {
 }
 
 export function getBestHand(userCards: Card[], communityCard: Card[]): Card[] {
-  const allCards: Card[] = [...userCards, ...communityCard];
+  if (userCards.length !== 2) {
+    throw new Error("User should have 2 cards");
+  }
 
-  return allCards.sort((a, b) => b.rank - a.rank).slice(0, 5);
+  if (communityCard.length !== 5) {
+    throw new Error("Community should have 5 cards");
+  }
+  const allCards: Card[] = [...userCards, ...communityCard].sort(
+    (a, b) => b.rank - a.rank,
+  );
+
+  return allCards.slice(0, 5);
 }
