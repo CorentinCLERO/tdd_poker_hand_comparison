@@ -40,6 +40,24 @@ function kickers(cards: Card[], excludeRanks: Rank[], count: number): Card[] {
   return cards.filter((c) => !excludeRanks.includes(c.rank)).slice(0, count);
 }
 
+function findThreeOfAKind(cards: Card[]): Card[][] {
+  const trips: Card[][] = [];
+  const rankCount: Record<number, Card[]> = {};
+
+  for (const card of cards) {
+    if (!rankCount[card.rank]) rankCount[card.rank] = [];
+    rankCount[card.rank]!.push(card);
+  }
+
+  for (const rank in rankCount) {
+    if (rankCount[rank]!.length === 3) {
+      trips.push(rankCount[rank]!);
+    }
+  }
+
+  return trips;
+}
+
 export class TexasHoldem {
   private players: Card[][];
   private communityCards: Card[];
@@ -61,7 +79,15 @@ export class TexasHoldem {
 
   getBestHand(playerIndex: number): Card[] {
     const userCards = this.players[playerIndex]!;
-    const allCards = [...userCards, ...this.communityCards].sort((a, b) => b.rank - a.rank);
+    const allCards = [...userCards, ...this.communityCards].sort(
+      (a, b) => b.rank - a.rank,
+    );
+
+    const trips = findThreeOfAKind(allCards);
+    if (trips.length > 0) {
+      return [...trips[0]!, ...kickers(allCards, [trips[0]![0]!.rank], 2)];
+    }
+
     const pairs = findPairs(allCards);
 
     if (pairs.length === 2) {
@@ -73,10 +99,7 @@ export class TexasHoldem {
     }
 
     if (pairs.length === 1) {
-      return [
-        ...pairs[0]!,
-        ...kickers(allCards, [pairs[0]![0]!.rank], 3),
-      ];
+      return [...pairs[0]!, ...kickers(allCards, [pairs[0]![0]!.rank], 3)];
     }
 
     return allCards.slice(0, 5);
