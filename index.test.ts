@@ -215,3 +215,69 @@ test("it return one pair", () => {
   // Then
   expect(result).toEqual(expect.arrayContaining(expected_result));
 });
+
+test("it return two pair", () => {
+  // Given
+  const user_cards: Card[] = [
+    {
+      rank: Rank.Two,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Jack,
+      color: Color.Spades,
+    },
+  ];
+
+  const community_cards: Card[] = [
+    {
+      rank: Rank.Six,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Three,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Two,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Jack,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Seven,
+      color: Color.Spades,
+    },
+  ];
+
+  const expected_result: Card[] = [
+    {
+      rank: Rank.Jack,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Jack,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Two,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Two,
+      color: Color.Hearts,
+    },
+    {
+      rank: Rank.Seven,
+      color: Color.Spades,
+    },
+  ];
+
+  // When
+  const result = getBestHand(user_cards, community_cards);
+
+  // Then
+  expect(result).toEqual(expect.arrayContaining(expected_result));
+});
