@@ -34,9 +34,21 @@ export function getBestHand(userCards: Card[], communityCard: Card[]): Card[] {
   if (communityCard.length !== 5) {
     throw new Error("Community should have 5 cards");
   }
+
   const allCards: Card[] = [...userCards, ...communityCard].sort(
     (a, b) => b.rank - a.rank,
   );
+
+  for (let i = 0; i < allCards.length - 1; i++) {
+    if (allCards[i]?.rank === allCards[i + 1]?.rank) {
+      const pairRank = allCards[i]?.rank;
+      return [
+        allCards[i]!,
+        allCards[i + 1]!,
+        ...allCards.filter((c) => c.rank !== pairRank).slice(0, 3),
+      ];
+    }
+  }
 
   return allCards.slice(0, 5);
 }
