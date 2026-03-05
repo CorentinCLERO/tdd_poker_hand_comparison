@@ -63,7 +63,7 @@ function findStraight(cards: Card[]): Card[] | null {
     (a, b) => b - a,
   );
 
-  if (uniqueRanks.includes(Rank.Ace)) uniqueRanks.push(1);
+  if (uniqueRanks.includes(Rank.Ace)) uniqueRanks.push(Rank.Ace);
 
   for (let i = 0; i <= uniqueRanks.length - 5; i++) {
     let isStraight = true;
@@ -79,13 +79,23 @@ function findStraight(cards: Card[]): Card[] | null {
         .filter(
           (c) =>
             straightRanks.includes(c.rank) ||
-            (c.rank === Rank.Ace && straightRanks.includes(1)),
+            (c.rank === Rank.Ace && straightRanks.includes(Rank.Ace)),
         )
         .sort((a, b) => b.rank - a.rank)
         .slice(0, 5);
     }
   }
+  return null;
+}
 
+function findFlush(cards: Card[]): Card[] | null {
+  const suits = Object.values(Color) as Color[];
+  for (const suit of suits) {
+    const suitedCards = cards
+      .filter((c) => c.color === suit)
+      .sort((a, b) => b.rank - a.rank);
+    if (suitedCards.length >= 5) return suitedCards.slice(0, 5);
+  }
   return null;
 }
 
@@ -115,7 +125,14 @@ export class TexasHoldem {
     );
 
     const straight = findStraight(allCards);
-    if (straight) return straight;
+    if (straight) {
+      return straight;
+    }
+
+    const flush = findFlush(allCards);
+    if (flush) {
+      return flush;
+    }
 
     const trips = findThreeOfAKind(allCards);
     if (trips.length > 0) {
