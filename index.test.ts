@@ -150,7 +150,7 @@ test("it return 5 highest cards", () => {
   ]);
 });
 
-test("it return 5 highest cards", () => {
+test("it return one pair", () => {
   // Given
   const user_cards: Card[] = [
     {
@@ -177,7 +177,30 @@ test("it return 5 highest cards", () => {
       color: Color.Spades,
     },
     {
-      rank: Rank.Five,
+      rank: Rank.Jack,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Seven,
+      color: Color.Spades,
+    },
+  ];
+
+  const expected_result: Card[] = [
+    {
+      rank: Rank.Jack,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Jack,
+      color: Color.Clubs,
+    },
+    {
+      rank: Rank.Six,
+      color: Color.Spades,
+    },
+    {
+      rank: Rank.Four,
       color: Color.Spades,
     },
     {
@@ -190,11 +213,5 @@ test("it return 5 highest cards", () => {
   const result = getBestHand(user_cards, community_cards);
 
   // Then
-  expect(result.map((card) => card.rank)).toEqual([
-    Rank.Jack,
-    Rank.Seven,
-    Rank.Six,
-    Rank.Five,
-    Rank.Four,
-  ]);
+  expect(result).toEqual(expect.arrayContaining(expected_result));
 });
