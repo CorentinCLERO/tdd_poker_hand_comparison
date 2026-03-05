@@ -136,6 +136,17 @@ function findStraightFlush(cards: Card[]): Card[] | null {
   return straightFlush || null;
 }
 
+function findRoyalFlush(cards: Card[]): Card[] | null {
+  const straightFlush = findStraightFlush(cards);
+  if (!straightFlush) return null;
+
+  const royalRanks = [Rank.Ace, Rank.King, Rank.Queen, Rank.Jack, Rank.Ten];
+  const handRanks = straightFlush.map((c) => c.rank).sort((a, b) => b - a);
+
+  const isRoyal = royalRanks.every((r) => handRanks.includes(r));
+  return isRoyal ? straightFlush : null;
+}
+
 export class TexasHoldem {
   private players: Card[][];
   private communityCards: Card[];
@@ -160,6 +171,11 @@ export class TexasHoldem {
     const allCards = [...userCards, ...this.communityCards].sort(
       (a, b) => b.rank - a.rank,
     );
+
+    const royalFlush = findRoyalFlush(allCards);
+    if (royalFlush) {
+      return royalFlush;
+    }
 
     const straightFlush = findStraightFlush(allCards);
     if (straightFlush) {
