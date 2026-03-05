@@ -128,6 +128,14 @@ function findFourOfAKind(cards: Card[]): Card[] | null {
   return [...quads!, kicker!];
 }
 
+function findStraightFlush(cards: Card[]): Card[] | null {
+  const flushCards = findFlush(cards);
+  if (!flushCards) return null;
+
+  const straightFlush = findStraight(flushCards);
+  return straightFlush || null;
+}
+
 export class TexasHoldem {
   private players: Card[][];
   private communityCards: Card[];
@@ -152,6 +160,11 @@ export class TexasHoldem {
     const allCards = [...userCards, ...this.communityCards].sort(
       (a, b) => b.rank - a.rank,
     );
+
+    const straightFlush = findStraightFlush(allCards);
+    if (straightFlush) {
+      return straightFlush;
+    }
 
     const quads = findFourOfAKind(allCards);
     if (quads) {
