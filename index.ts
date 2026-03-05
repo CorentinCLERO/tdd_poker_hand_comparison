@@ -39,15 +39,29 @@ export function getBestHand(userCards: Card[], communityCard: Card[]): Card[] {
     (a, b) => b.rank - a.rank,
   );
 
+  const pairs: Card[][] = [];
+
   for (let i = 0; i < allCards.length - 1; i++) {
     if (allCards[i]?.rank === allCards[i + 1]?.rank) {
-      const pairRank = allCards[i]?.rank;
-      return [
-        allCards[i]!,
-        allCards[i + 1]!,
-        ...allCards.filter((c) => c.rank !== pairRank).slice(0, 3),
-      ];
+      pairs.push([allCards[i]!, allCards[i + 1]!]);
     }
+  }
+
+  if (pairs.length === 2) {
+    return [
+      ...pairs[0]!,
+      ...pairs[1]!,
+      ...allCards
+        .filter((c) => c.rank !== pairs[0]![0]!.rank && c.rank !== pairs[1]![0]!.rank)
+        .slice(0, 1),
+    ];
+  }
+
+  if (pairs.length === 1) {
+    return [
+      ...pairs[0]!,
+      ...allCards.filter((c) => c.rank !== pairs[0]![0]!.rank).slice(0, 3),
+    ];
   }
 
   return allCards.slice(0, 5);
