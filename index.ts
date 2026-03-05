@@ -111,6 +111,23 @@ function findFullHouse(cards: Card[]): Card[] | null {
   return [...trips[0]!, ...pairs[0]!.slice(0, 2)];
 }
 
+function findFourOfAKind(cards: Card[]): Card[] | null {
+  const rankMap: Record<number, Card[]> = {};
+  for (const c of cards) {
+    (rankMap[c.rank] = rankMap[c.rank] || []).push(c);
+  }
+
+  const quads = Object.values(rankMap).find((g) => g.length === 4);
+
+  if (!quads) return null;
+
+  const kicker = cards
+    .filter((c) => c.rank !== quads[0]!.rank)
+    .sort((a, b) => b.rank - a.rank)[0];
+
+  return [...quads!, kicker!];
+}
+
 export class TexasHoldem {
   private players: Card[][];
   private communityCards: Card[];
@@ -135,6 +152,11 @@ export class TexasHoldem {
     const allCards = [...userCards, ...this.communityCards].sort(
       (a, b) => b.rank - a.rank,
     );
+
+    const quads = findFourOfAKind(allCards);
+    if (quads) {
+      return quads;
+    }
 
     const fullHouse = findFullHouse(allCards);
     if (fullHouse) {
