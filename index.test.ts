@@ -1,6 +1,10 @@
 import { expect, test } from "bun:test";
-import { getBestHand, Rank, Color } from ".";
+import { TexasHoldem, Rank, Color } from ".";
 import type Card from ".";
+
+// ------------------------------------------------
+// tests getBestHand
+// ------------------------------------------------
 
 test("it return 5 cards", () => {
   // Given
@@ -39,7 +43,8 @@ test("it return 5 cards", () => {
   ];
 
   // When
-  const result = getBestHand(user_cards, community_cards);
+  const game = new TexasHoldem([user_cards], community_cards);
+  const result = game.getBestHand(0);
 
   // Then
   expect(result.length).toBe(5);
@@ -74,7 +79,7 @@ test("user should have 2 cards", () => {
 
   // When
   // Then
-  expect(() => getBestHand(user_cards, community_cards)).toThrow(
+  expect(() => new TexasHoldem([user_cards], community_cards)).toThrow(
     "User should have 2 cards",
   );
 });
@@ -96,7 +101,7 @@ test("community should have 5 cards", () => {
 
   // When
   // Then
-  expect(() => getBestHand(user_cards, community_cards)).toThrow(
+  expect(() => new TexasHoldem([user_cards], community_cards)).toThrow(
     "Community should have 5 cards",
   );
 });
@@ -138,7 +143,8 @@ test("it return 5 highest cards", () => {
   ];
 
   // When
-  const result = getBestHand(user_cards, community_cards);
+  const game = new TexasHoldem([user_cards], community_cards);
+  const result = game.getBestHand(0);
 
   // Then
   expect(result.map((card) => card.rank)).toEqual([
@@ -210,7 +216,8 @@ test("it return one pair", () => {
   ];
 
   // When
-  const result = getBestHand(user_cards, community_cards);
+  const game = new TexasHoldem([user_cards], community_cards);
+  const result = game.getBestHand(0);
 
   // Then
   expect(result).toEqual(expect.arrayContaining(expected_result));
@@ -276,7 +283,8 @@ test("it return two pair", () => {
   ];
 
   // When
-  const result = getBestHand(user_cards, community_cards);
+  const game = new TexasHoldem([user_cards], community_cards);
+  const result = game.getBestHand(0);
 
   // Then
   expect(result).toEqual(expect.arrayContaining(expected_result));

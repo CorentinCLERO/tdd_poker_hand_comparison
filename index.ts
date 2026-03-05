@@ -40,32 +40,45 @@ function kickers(cards: Card[], excludeRanks: Rank[], count: number): Card[] {
   return cards.filter((c) => !excludeRanks.includes(c.rank)).slice(0, count);
 }
 
-export function getBestHand(userCards: Card[], communityCards: Card[]): Card[] {
-  if (userCards.length !== 2) {
-    throw new Error("User should have 2 cards");
+export class TexasHoldem {
+  private players: Card[][];
+  private communityCards: Card[];
+
+  constructor(players: Card[][], communityCards: Card[]) {
+    for (const player of players) {
+      if (player.length !== 2) {
+        throw new Error("User should have 2 cards");
+      }
+    }
+
+    if (communityCards.length !== 5) {
+      throw new Error("Community should have 5 cards");
+    }
+
+    this.players = players;
+    this.communityCards = communityCards;
   }
 
-  if (communityCards.length !== 5) {
-    throw new Error("Community should have 5 cards");
+  getBestHand(playerIndex: number): Card[] {
+    const userCards = this.players[playerIndex]!;
+    const allCards = [...userCards, ...this.communityCards].sort((a, b) => b.rank - a.rank);
+    const pairs = findPairs(allCards);
+
+    if (pairs.length === 2) {
+      return [
+        ...pairs[0]!,
+        ...pairs[1]!,
+        ...kickers(allCards, [pairs[0]![0]!.rank, pairs[1]![0]!.rank], 1),
+      ];
+    }
+
+    if (pairs.length === 1) {
+      return [
+        ...pairs[0]!,
+        ...kickers(allCards, [pairs[0]![0]!.rank], 3),
+      ];
+    }
+
+    return allCards.slice(0, 5);
   }
-
-  const allCards = [...userCards, ...communityCards].sort((a, b) => b.rank - a.rank);
-  const pairs = findPairs(allCards);
-
-  if (pairs.length === 2) {
-    return [
-      ...pairs[0]!,
-      ...pairs[1]!,
-      ...kickers(allCards, [pairs[0]![0]!.rank, pairs[1]![0]!.rank], 1),
-    ];
-  }
-
-  if (pairs.length === 1) {
-    return [
-      ...pairs[0]!,
-      ...kickers(allCards, [pairs[0]![0]!.rank], 3),
-    ];
-  }
-
-  return allCards.slice(0, 5);
 }
