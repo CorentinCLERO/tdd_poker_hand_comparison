@@ -58,6 +58,37 @@ function findThreeOfAKind(cards: Card[]): Card[][] {
   return trips;
 }
 
+function findStraight(cards: Card[]): Card[] | null {
+  const uniqueRanks = Array.from(new Set(cards.map((c) => c.rank))).sort(
+    (a, b) => b - a,
+  );
+
+  if (uniqueRanks.includes(Rank.Ace)) uniqueRanks.push(1);
+
+  for (let i = 0; i <= uniqueRanks.length - 5; i++) {
+    let isStraight = true;
+    for (let j = 0; j < 4; j++) {
+      if (uniqueRanks[i + j]! - 1 !== uniqueRanks[i + j + 1]) {
+        isStraight = false;
+        break;
+      }
+    }
+    if (isStraight) {
+      const straightRanks = uniqueRanks.slice(i, i + 5);
+      return cards
+        .filter(
+          (c) =>
+            straightRanks.includes(c.rank) ||
+            (c.rank === Rank.Ace && straightRanks.includes(1)),
+        )
+        .sort((a, b) => b.rank - a.rank)
+        .slice(0, 5);
+    }
+  }
+
+  return null;
+}
+
 export class TexasHoldem {
   private players: Card[][];
   private communityCards: Card[];
@@ -82,6 +113,9 @@ export class TexasHoldem {
     const allCards = [...userCards, ...this.communityCards].sort(
       (a, b) => b.rank - a.rank,
     );
+
+    const straight = findStraight(allCards);
+    if (straight) return straight;
 
     const trips = findThreeOfAKind(allCards);
     if (trips.length > 0) {
