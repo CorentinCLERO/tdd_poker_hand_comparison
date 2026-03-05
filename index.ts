@@ -99,6 +99,18 @@ function findFlush(cards: Card[]): Card[] | null {
   return null;
 }
 
+function findFullHouse(cards: Card[]): Card[] | null {
+  const trips = findThreeOfAKind(cards);
+  if (!trips || trips.length < 1) return null;
+
+  const remainingCards = cards.filter((c) => c.rank !== trips[0]![0]!.rank);
+  const pairs = findPairs(remainingCards);
+
+  if (!pairs || pairs.length === 0) return null;
+
+  return [...trips[0]!, ...pairs[0]!.slice(0, 2)];
+}
+
 export class TexasHoldem {
   private players: Card[][];
   private communityCards: Card[];
@@ -123,6 +135,11 @@ export class TexasHoldem {
     const allCards = [...userCards, ...this.communityCards].sort(
       (a, b) => b.rank - a.rank,
     );
+
+    const fullHouse = findFullHouse(allCards);
+    if (fullHouse) {
+      return fullHouse;
+    }
 
     const straight = findStraight(allCards);
     if (straight) {

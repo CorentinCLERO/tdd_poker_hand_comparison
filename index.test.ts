@@ -541,12 +541,12 @@ test("it return full house", () => {
       color: Color.Diamonds,
     },
     {
-      rank: Rank.Nine,
+      rank: Rank.Three,
       color: Color.Spades,
     },
     {
-      rank: Rank.Nine,
-      color: Color.Hearts,
+      rank: Rank.Three,
+      color: Color.Clubs,
     },
   ];
 
